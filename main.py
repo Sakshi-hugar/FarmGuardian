@@ -1,23 +1,9 @@
-"""
-FarmGuardian backend — serves real weed/crop detections from a trained YOLOv8 model.
-
-Setup:
-    1. Put your trained weights file next to this script, named `farmguardian_best.pt`
-       (the file you downloaded from the Colab training notebook).
-    2. pip install -r requirements.txt
-    3. uvicorn main:app --reload --port 8000
-    4. Open http://localhost:8000/docs to test it directly (upload an image, see the
-       JSON response) — that alone is a legitimate live demo of the real model.
-    5. Optionally, open farmguardian.html in your browser and paste
-       http://localhost:8000 into the "Backend URL" field on the Analyze page to see
-       real detections drawn in the dashboard instead of simulated ones.
-"""
-
 import io
 import os
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from PIL import Image
 from ultralytics import YOLO
 
@@ -76,14 +62,7 @@ def compute_severity(weed_count: int, crop_count: int):
 
 
 def suppress_contained_boxes(boxes, containment_threshold=0.6):
-    """
-    Standard IoU-based NMS misses a common pattern here: a small box sitting mostly
-    *inside* a much larger box has low IoU (since IoU divides by the combined area),
-    so it survives normal NMS even though it's clearly a duplicate/spurious detection
-    of part of the same plant. This instead measures overlap relative to the SMALLER
-    box's own area ("intersection over minimum"), which catches containment regardless
-    of the size difference between the two boxes, and keeps the higher-confidence one.
-    """
+    
     def area(b):
         return max(0.0, b["w"]) * max(0.0, b["h"])
 
@@ -180,8 +159,13 @@ async def analyze(image: UploadFile = File(...), conf: float = Form(None)):
 
 @app.get("/")
 def root():
+    """Serves the FarmGuardian dashboard itself, so the API and the UI live at the
+    same URL/origin — no separate frontend hosting needed, and no CORS to worry about
+    since everything is same-origin."""
+    if os.path.exists("farmguardian.html"):
+        return FileResponse("farmguardian.html", media_type="text/html")
     return {
-        "message": "FarmGuardian inference API is running.",
+        "message": "FarmGuardian inference API is running (farmguardian.html not found next to main.py).",
         "docs": "/docs",
         "health": "/health",
         "analyze_endpoint": "POST /analyze (multipart form field: image)",
