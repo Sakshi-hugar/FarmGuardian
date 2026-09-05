@@ -6,7 +6,7 @@ Serves real detections from your trained YOLOv8 model (`farmguardian_best.pt`) o
 
 ```bash
 # 1. Put your trained weights here, named exactly this:
-#    farmguardian_best.pt   (the file you downloaded from Colab)
+#    farmguardian_best.pt 
 
 # 2. Install dependencies
 pip install -r requirements.txt
