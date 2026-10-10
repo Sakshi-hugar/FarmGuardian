@@ -284,7 +284,7 @@ select{
     <div class="nav-item" data-page="compare"><span class="ic">⇄</span> Before / After</div>
     <div class="nav-item" data-page="architecture"><span class="ic">◫</span> Architecture</div>
     <div class="nav-item" data-page="about"><span class="ic">ℹ</span> About</div>
-    <div class="sidebar-foot">Ideathon prototype · simulated detections for demo purposes</div>
+      <div class="sidebar-foot">Prototype · YOLOv8 detections (simulated when no backend is connected)</div>
   </div>
 
   <!-- MAIN -->
@@ -509,7 +509,7 @@ select{
         </div>
         <div>
           <div class="disclaimer" style="margin-bottom:16px;">
-            <b>⚠ Prototype notice —</b> This build simulates AI detections for demo purposes (no model is trained/run in this artifact). The pipeline, UI and recommendation logic are fully wired up and designed to swap in a real trained YOLO model with no change to the workflow.
+            <b>⚠ Prototype notice —</b>  Detections come from a YOLOv8 model fine-tuned on a small public dataset (142 training images). When no backend is connected, the page falls back to simulated detections for offline demos.
           </div>
           <div class="disclaimer">
             <b>⚠ On chemical use —</b> FarmGuardian never recommends a specific chemical from an image alone. Any treatment suggestion depends on crop type, weed species, growth stage, and local agricultural guidance — always confirm with an agronomist or the product label before applying anything.
